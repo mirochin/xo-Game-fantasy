@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XO Game</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #000000; /* Background color */
+    font-family: Arial, sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .logo {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  .title {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+  .btn-start {
+    background-color: #3498db;
+    border: none;
+    color: #fff;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    transform-style: preserve-3d; /* Make the button three-dimensional */
+  }
+  .btn-start:hover {
+    background-color: #2980b9;
+    transform: translateY(-5px); /* Move the button up on hover */
+  }
+  .restart-button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    transform-style: preserve-3d; /* Make the button three-dimensional */
+  }
+  .restart-button:hover {
+    background-color: #333333;
+    transform: translateY(-5px); /* Move the button up on hover */
+  }
+  .quit-button {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    transform-style: preserve-3d; /* Make the button three-dimensional */
+  }
+  .quit-button:hover {
+    background-color: #cc0000;
+    transform: translateY(-5px); /* Move the button up on hover */
+  }
+  .page {
+    display: none;
+  }
+  .active {
+    display: block;
+  }
+
+  /* Game board */
+  .tic-tac-toe {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    gap: 5px;
+    margin-top: 20px;
+    background-image: url('https://i.imgur.com/c7emooG.jpg'); /* Add image as background */
+    background-size: cover; /* Ensure full image display */
+    background-position: center;
+  }
+  .tic-tac-toe div {
+    background-color: rgba(0, 0, 128, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .tic-tac-toe div:hover {
+    transform: scale(1.05);
+  }
+  .tic-tac-toe div.glowing {
+    animation: glow 0.5s infinite alternate;
+  }
+
+  /* Styling for X and O */
+  .tic-tac-toe div.x {
+    color: white;
+  }
+  .tic-tac-toe div.o {
+    color: blue;
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px white;
+    }
+    to {
+      text-shadow: 0 0 20px white, 0 0 30px white, 0 0 40px white, 0 0 50px white;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="page1" class="page active">
+  <div class="container">
+    <img src="https://i.imgur.com/c7emooG.jpg" alt="XO Logo" class="logo">
+    <div class="title">XO Game</div>
+    <button class="btn-start" onclick="showPage('page2')">Start Game</button>
+  </div>
+</div>
+
+<div id="page2" class="page">
+  <div class="container">
+    <div class="title" style="margin-bottom: 40px;">XO Fantasy</div>
+    <button class="btn-start" onclick="showPage('page3')" style="font-size: 16px;">Play against AI</button>
+    <button class="btn-start" onclick="showPage('sendCoinsPage')" style="font-size: 16px;">Send Coins</button> <!-- Add send coins button -->
+  </div>
+</div>
+
+<div id="page3" class="page">
+  <div class="container">
+    <div id="goldCoin" style="margin-top: 20px;">Coins: <span id="coinsCount">0</span> <span>&#x1F4B0;</span></div> <!-- Move here -->
+    <div class="tic-tac-toe">
+        <div onclick="play(this)"></div><div onclick="play(this)"></div><div onclick="play(this)"></div>
+        <div onclick="play(this)"></div><div onclick="play(this)"></div><div onclick="play(this)"></div>
+        <div onclick="play(this)"></div><div onclick="play(this)"></div><div onclick="play(this)"></div>
+    </div>
+    <div style="display: flex; margin-top: 20px;">
+        <button class="restart-button" onclick="confirmQuit()">Quit &#x1F6AB;</button>
+        <div style="width: 10px;"></div> <!-- Add space here -->
+        <button class="restart-button" onclick="resetBoard()">Restart</button>
+    </div>
+    <div id="gameResultEmoji"></div> <!-- Display emoji here -->
+    <button class="goBack" onclick="showPage('page2')">Go back</button>
+  </div>
+</div>
+<div
+id="sendCoinsPage" class="page"> <!-- Send Coins Page -->
+  <div class="container">
+    <a href="#" class="goBack" onclick="show
+     Page('page2')">Go back <span>(soon)</span> &larr;</a> <!-- Go back button -->
+    <h2>Send Coins</h2>
+    <form>
+      <label for="recipientId">Recipient ID:</label><br>
+      <input type="text" id="recipientId" name="recipientId" placeholder="Enter recipient ID"><br>
+      <label for="amount">Number of Coins:</label><br>
+      <input type="number" id="amount" name="amount" placeholder="Enter number of coins (minimum 50)"><br><br>
+      <button type="button" onclick="sendCoins()">Send</button>
+    </form>
+  </div>
+</div>
+
+<script>
+let currentPlayer = 'X';
+let coins = 0;
+let gameOver = false;
+
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    document.getElementById(pageId).classList.add('active');
+}
+
+function play(cell) {
+    if (!cell.textContent && !gameOver) {
+        cell.textContent = currentPlayer;
+        cell.classList.add('glowing');
+        cell.classList.add(currentPlayer.toLowerCase());
+
+        // Random background color
+        const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+        cell.style.backgroundColor = randomColor;
+
+        if (checkWinner()) {
+            coins += 20;
+            document.getElementById('coinsCount').textContent = coins;
+            document.getElementById('goldCoin').style.display = 'inline';
+            gameOver = true;
+            document.getElementById('gameResultEmoji').innerHTML = '&#x1F600;'; // Happy emoji
+        } else if (!checkDraw()) {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            if (currentPlayer === 'O') {
+                setTimeout(computerMove, 500);
+            }
+        } else {
+            gameOver = true;
+            alert("It's a draw!");
+            document.getElementById('gameResultEmoji').innerHTML = '&#x1F614;'; // Sad emoji
+        }
+    }
+}
+
+function computerMove() {
+    const emptyCells = Array.from(document.querySelectorAll('.tic-tac-toe div')).filter(cell => !cell.textContent);
+    let bestMove;
+    for (let cell of emptyCells) {
+        cell.textContent = 'O';
+        if (checkWinner()) {
+            bestMove = cell;
+        }
+        cell.textContent = '';
+    }
+    if (!bestMove) {
+        for (let cell of emptyCells) {
+            cell.textContent = 'X';
+            if (checkWinner()) {
+                bestMove = cell;
+            }
+            cell.textContent = '';
+        }
+    }
+    if (!bestMove) {
+        bestMove = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    }
+    bestMove.textContent = 'O';
+    bestMove.classList.add('glowing');
+    bestMove.classList.add('o');
+    bestMove.style.backgroundColor = '#0000ff'; // You can change color as desired
+    if (checkWinner()) {
+        gameOver = true;
+        document.getElementById('gameResultEmoji').innerHTML = '&#x1F614;'; // Sad emoji
+    } else if (checkDraw()) {
+        gameOver = true;
+        alert("It's a draw!");
+        document.getElementById('gameResultEmoji').innerHTML = '&#x1F614;'; // Sad emoji
+    }
+    currentPlayer = 'X';
+}
+
+function resetBoard() {
+    const cells = document.querySelectorAll('.tic-tac-toe div');
+    cells.forEach(cell => {
+        cell.textContent = '';
+        cell.classList.remove('glowing');
+        cell.style.backgroundColor = 'rgba(0, 0, 128, 0.5)';
+        cell.classList.remove('x');
+        cell.classList.remove('o');
+    });
+    currentPlayer = 'X';
+    gameOver = false;
+    if (document.getElementById('goldCoin').style.display !== 'inline') {
+        document.getElementById('goldCoin').style.display = 'inline';
+    }
+    document.getElementById('gameResultEmoji').innerHTML = '';
+}
+
+function confirmQuit() {
+    resetBoard(); // Restart the game instead of quitting
+}
+
+function sendCoins() {
+    var recipientId = document.getElementById("recipientId").value;
+    var amount = document.getElementById("amount").value;
+
+    if (amount < 50) {
+        alert("Minimum amount to send is 50 coins.");
+        return;
+    }
+
+    // Here you can add the code to check if the service is active or not
+    // Let's assume it's inactive in this example
+    alert("Service is inactive, understood.");
+
+    // Clear the form fields after sending coins
+    document.getElementById("recipientId").value = "";
+    document.getElementById("amount").value = "";
+}
+
+function checkWinner() {
+    const winConditions = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6] // Diagonals
+    ];
+    const cells = document.querySelectorAll('.tic-tac-toe div');
+    for (let condition of winConditions) {
+        const [a, b, c] = condition;
+        if (cells[a].textContent && cells[a].textContent === cells[b].textContent &&
+            cells[a].textContent === cells[c].textContent) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkDraw() {
+    const cells = document.querySelectorAll('.tic-tac-toe div');
+    for (let cell of cells) {
+        if (!cell.textContent) {
+            return false;
+        }
+    }
+    return true;
+}
+</script>
+
+</body>
+</html>
